@@ -1,0 +1,119 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+
+    <h1 style="text-align: center;">Listado de Información sobre los Empleados</h1>
+
+    <div class="field">
+
+        <table class="ui green celled table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Días Trabajados</th>
+                    <th>Salario Esperado</th>
+                    <th>Género</th>
+                    <th>Celular</th>
+                    <th>Correo</th>
+                    <th>Departamento</th>
+                    <th>Nro. Documento</th>
+                    <th>Cuenta Bancaria</th>
+                    <th>Tipo de Cuenta</th>
+                    <th>Cargo del Empleado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in empleados %}
+                <tr>
+                    <td>{{ c.1 }}</td>
+                    <td>{{ c.2 }}</td>
+                    <td>{{ c.3 }}</td>
+                    <td>{{ c.4 }}</td>
+                    <td>{{ c.5 }}</td>
+                    <td>{{ c.6 }}</td>
+                    <td>{{ c.7 }}</td>
+                    <td>{{ c.8 }}</td>
+                    <td>{{ c.9 }}</td>
+                    <td>{{ c.10 }}</td>
+                    <td>{{ c.11 }}</td>
+                    <td>{{ c.12 }}</td>
+                    <td>
+                        <a href="#" onclick="borrarEmpleado('{{ c.0 }}')"><i class="trash alternate outline icon"></i></a>
+                        <a href="#" onclick="editarEmpleado('{{ c.0 }}')"><i class="pencil alternate icon"></i></a>
+                        <a href="#" onclick="cargarSalario('{{ c.0 }}')"><i class="dollar sign icon"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+{% include 'Inc/footer.html' %}
+
+
+<script>
+    function borrarEmpleado(idempleado) {
+        swal({
+            title: "Esta seguro que desea borrar?",
+            text: "La informacion que borres NO se puede recuperar.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                        location.href = "/Empleado/Listado/Borrar/"+idempleado;
+                } else {
+                    swal("La informacion no se ha borrado.");
+                }
+            });
+    }
+</script>
+
+<script>
+    function editarEmpleado(idempleado) {
+        swal({
+            title: "Esta seguro que desea editar el registro?",
+            text: "La informacion que edites tendra la informacion del ultimo registro.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                        location.href = "/Empleado/Listado/Edicion/"+idempleado;
+                } else {
+                    swal("La informacion no se ha editado.");
+                }
+            });
+    }
+</script>
+
+<script>
+    function cargarSalario(id) {
+        swal({
+            title: "Vas a cargar el salario del ID: "+id,
+            text: "Se guardará la información dentro de la BD.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                        location.href = "/Empleado/CSal/"+id;
+                } else {
+                    swal("No se ha cargado el Salario.");
+                }
+            });
+    }
+</script>
+
+<script src='{% static "js/sweetalert.min.js" %}'>
+
+</script>

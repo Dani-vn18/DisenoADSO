@@ -1,0 +1,217 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+
+    <h1 style="text-align: center;">Estás en el apartado de Generar Reporte Diario</h1>
+
+    <hr>
+
+    <div class="three fields">
+
+        <div class="field">
+
+            <h3 style="text-align: center;">Digite la fecha a Consultar</h3>
+            <br>
+
+        </div>
+
+        <div class="field">
+
+            <div class="fluid ui input">
+
+                <input type="date" id="fecha_factura" name="fecha_factura">
+
+            </div>
+
+            <button onclick="traerFacturas()" type="button" class="fluid ui inverted green button">Consultar Fecha</button>
+
+        </div>
+
+    </div>
+
+    <br>
+    <hr>
+
+    <h1 style="text-align: center;">La información del reporte generado es</h1>
+
+    <table class="ui green celled table">
+        <thead>
+            <tr>
+                <th># Factura</th>
+                <th>Info. de Empleado</th>
+                <th>Total de Factura</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody id="tablabody">
+
+        </tbody>
+
+
+        <tfoot id="tablafooter">
+
+        </tfoot>
+
+    </table>
+
+
+
+</div>
+
+
+<script>
+
+    $('.ui.modal')
+    .modal()
+    ;
+
+</script>
+
+<script>
+
+    let ventasDia = 0;
+    let contador = 0;
+    let totalFacturas = 0;
+
+    const traerFacturas = () => {
+
+
+        const fechaInput = document.getElementById("fecha_factura").value;
+        const url = `/Reportes/Generar/Diario/${fechaInput}`;
+    
+        fetch(url)
+        .then((data) => data.json())
+        .then((data) => {
+            if ("length" in data && data.length === 0) {
+                alert("No se encontraron facturas con esa fecha.");
+            } else {
+            alert("Sí se encontraron facturas con esa fecha.");
+
+            const facturasAgrupadas = {};
+
+            for (const factura of data.facturas) {
+                totalFacturas += parseFloat(factura.factura_id__total);
+            }
+
+            console.log('El total de las facturas es: '+totalFacturas)
+
+            for (const factura of data.facturas) {
+                const idFactura = factura.factura_id;
+                if (!facturasAgrupadas[idFactura]) {
+                    facturasAgrupadas[idFactura] = {
+                    ...factura,
+                    detalles: [],
+                    };
+                }
+                facturasAgrupadas[idFactura].detalles.push(factura);
+            }
+
+            for (const idFactura in facturasAgrupadas) {
+                const factura = facturasAgrupadas[idFactura];
+                const nombreEmpleado = factura.factura_id__empleado_id__nombre_emp;
+                const apellidoEmpleado = factura.factura_id__empleado_id__apellido_emp;
+                const docEmpleado = factura.factura_id__empleado_id__documento_emp;
+                const correoEmpleado = factura.factura_id__empleado_id__correo_emp;
+                const totalFactura = factura.factura_id__total;
+
+                const filaHtml = `
+                <tr>
+                    <td>Factura #${idFactura}</td>
+                    <td id='productos' name='productos' colspan='1'>
+                        <ul>
+                            <li>NOMBRE: ${nombreEmpleado} ${apellidoEmpleado}</li>
+                            <li>DOCUMENTO: ${docEmpleado}</li>
+                            <li>CORREO: ${correoEmpleado}</li>
+                        </ul>
+                    </td>
+                    <td>$ ${totalFactura} COP</td>
+                    <td><button type="button" class="fluid ui inverted green button" onclick="modalDetalle(this)" value="${idFactura}" name="boton_detalle" id="boton_detalle" >Ver Detalle</button></td>
+                `;
+
+                $('#tablabody').append(filaHtml);
+
+            }
+
+            totalFacturas += parseFloat(facturasAgrupadas.factura_id__total);
+
+            const footerHtml = `
+                    <td>Esperado para la fecha ${fechaInput} un total de: $ ${totalFacturas} COP</td>
+                `;
+
+            $('#tablafooter').append(footerHtml);
+
+
+            }
+        });
+    };
+        
+</script>
+
+<script>
+    
+    const modalDetalle = async (event) => {
+
+        const idFac = event.value;
+
+        console.log('El ID consultado es: '+idFac)
+
+        try {
+            const response = await fetch(`/Reportes/Generar/Diario/Detalle/${idFac}`);
+            const data = await response.json();
+
+            console.log(data)
+
+            const { detalle } = data;
+
+            let productosHtml = "";
+            let preciosHtml = "";
+            let cantidadesHtml = "";
+            for (const producto of detalle) {
+                productosHtml += `<li>${producto.producto_id__nombre}</li>`;
+                preciosHtml += `<li>($${producto.producto_id__precio} COP)</li>`;
+                cantidadesHtml += `<li>${producto.cantidad}</li>`;
+            }
+
+            const modalHtml = `
+                <div class="ui modal">
+                <i class="close icon"></i>
+                <div class="header">
+                    Detalle de Factura #${idFac}
+                </div>
+
+                <div class="content">
+                    <table class="ui green celled table" id="tablaDetalle">
+                        <thead>
+                            <tr>
+                                <th>Nombre Producto</th>
+                                <th>Precio Producto</th>
+                                <th>Cantidad Producto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <td>
+                                <ul>${productosHtml}</ul>
+                            </td>
+                            <td>
+                                <ul>${preciosHtml}</ul>
+                            </td>
+                            <td>
+                                <ul>${cantidadesHtml}</ul>
+                            </td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            `;
+
+            $(modalHtml).modal('show');
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
+        }
+    };
+
+</script>
+
+{% include 'Inc/footer.html' %}

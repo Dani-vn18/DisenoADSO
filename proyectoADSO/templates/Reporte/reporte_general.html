@@ -1,0 +1,41 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+
+    <h1 style="text-align: center;">Bienvenido al Reporte General</h1>
+
+    <hr>
+
+    <table class="ui green celled table">
+        <thead>
+            <tr>
+                <th>Nro. de Factura</th>
+                <th>Productos de la Factura</th>
+                <th>Cantidad</th>
+                <th>INFO. del Empleado</th>
+                <th>Fecha</th>
+                <th>Total Factura</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for f in facturas %}
+            <tr>
+                <td>#Factura: ({{ f.factura_id }})</td>
+                <td>({{ f.producto.nombre }})</td>
+                <td>{{ f.cantidad }}</td>
+                <td>NOM: ( {{ f.factura.empleado.nombre_emp }} {{ f.factura.empleado.apellido_emp }} ) CAR: ( {{ f.factura.empleado.cargo.nombre }} )</td>
+                <td>( {{ f.factura.fecha }} )</td>
+                <td>Por: ($ {{ f.factura.total }} COP)</td>
+                <td>
+                    <a href="#"><i class="file pdf outline icon large"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+
+{% include 'Inc/footer.html' %}

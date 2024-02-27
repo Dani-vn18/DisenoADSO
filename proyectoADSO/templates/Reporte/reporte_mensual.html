@@ -1,0 +1,157 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+
+    <h1 style="text-align: center;">Estás en el apartado de Generar Reporte Mensual</h1>
+
+    <hr>
+
+    <div class="three fields">
+
+        <div class="field">
+
+            <h3 style="text-align: center;">Digite el mes a Consultar</h3>
+            <br>
+
+        </div>
+
+        <div class="field">
+
+            <div class="fluid ui input">
+
+                <input type="month" id="fecha_factura" name="fecha_factura">
+
+            </div>
+
+            <button onclick="traerFacturas()" type="button" class="fluid ui inverted green button">Consultar Fecha</button>
+
+        </div>
+
+    </div>
+
+    <br>
+    <hr>
+
+    <h1 style="text-align: center;">La información del reporte generado es</h1>
+
+    <table class="ui green celled table">
+
+        <thead id='cabecera' name='cabecera'>
+            <tr>
+                <th># Factura</th>
+                <th>Nombre Emp</th>
+                <th>Documento Emp</th>
+                <th>Cargo</th>
+                <th>Nombre Producto</th>
+                <th>Precio Producto</th>
+                <th>Cantidad Producto</th>
+                <th>Total Factura</th>
+            </tr>
+        </thead>
+
+        <tbody id="tablabody">
+
+        </tbody>
+            
+
+    </table>
+
+
+
+</div>
+
+
+<script>
+    let ventasDia = 0;
+    let contador = 0;
+    
+    const traerFacturas = async () => {
+        contador++;
+        
+        const fecha_fac = document.getElementById("fecha_factura").value;
+        fecha_mes_separada = fecha_fac.split("-",2);
+
+        fecha_factura_year = fecha_mes_separada[0]
+        fecha_factura_month = fecha_mes_separada[1]
+
+        console.log(fecha_factura_year)
+        console.log(fecha_factura_month)
+
+        console.log(fecha_mes_separada);
+        console.log(fecha_fac);
+
+        try {
+            const response = await fetch('/Reportes/Generar/Mensual/'+fecha_factura_month+'/'+fecha_factura_year);
+            const data = await response.json();
+            console.log(data)
+
+            const { empleado, factura, detalle } = data;
+
+            const processedFacturas = new Set();
+
+            for (const facturaItem of factura) {
+                const facturaId = facturaItem.factura_id;
+            
+                if (processedFacturas.has(facturaId)) {
+                    continue;
+                }
+                
+                processedFacturas.add(facturaId);
+            
+                const empleadoFactura = empleado.find(emp => emp.factura_id === facturaId);
+                const detalleFactura = detalle.filter(det => det.factura_id === facturaId);
+            
+                const nombreEmpleado = empleadoFactura.factura_id__empleado_id__nombre_emp;
+                const apellidoEmpleado = empleadoFactura.factura_id__empleado_id__apellido_emp;
+                const documentoEmpleado = empleadoFactura.factura_id__empleado_id__documento_emp;
+                const nombreCargo = empleadoFactura.factura_id__empleado_id__cargo_id__nombre;
+            
+                const totalFactura = facturaItem.factura_id__total;
+            
+                let productosHtml = "";
+                let preciosHtml = "";
+                let cantidadesHtml = "";
+                for (const producto of detalleFactura) {
+                    productosHtml += `<li>${producto.producto_id__nombre}</li>`;
+                    preciosHtml += `<li>($${producto.producto_id__precio} COP)</li>`;
+                    cantidadesHtml += `<li>${producto.cantidad}</li>`;
+                }
+            
+                const filaHtml = `
+                    <tr>
+                        <td id='id_fac' name='id_fac'>${facturaId}</td>
+                        <td id='nom_empleado' name='nom_empleado'>${nombreEmpleado} ${apellidoEmpleado}</td>
+                        <td id='doc_empleado' name='doc_empleado'>${documentoEmpleado}</td>
+                        <td id='car_empleado' name='car_empleado'>${nombreCargo}</td>
+                        <td id='productos' name='productos' colspan='1'>
+                            <ul>
+                                ${productosHtml}
+                            </ul>
+                        </td>
+                        <td id='precios' name='precios' colspan='1'>
+                            <ul>
+                                ${preciosHtml}
+                            </ul>
+                        </td>
+                        <td id='cantidades' name='cantidades' colspan='1'>
+                            <ul>
+                                ${cantidadesHtml}
+                            </ul>
+                        </td>
+                        <td id='total' name='total'>$ ${totalFactura}COP</td>
+                    </tr>
+                `;
+            
+                $('#tablabody').append(filaHtml);
+            }
+            
+
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
+        }
+    }
+</script>
+
+
+{% include 'Inc/footer.html' %}

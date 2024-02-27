@@ -1,0 +1,27 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+    <div class="ui container">
+        <h1 style="text-align: center;">Formulario de Registro de Productos</h1>
+        <form action="" method="POST" class="ui form">
+            {% csrf_token %}
+
+            <div class="two fields">
+                <div class="field">
+                    <label for="">Nombre</label>
+                    <input type="text" name="nombre" id="nombre">
+                </div>
+                <div class="field">
+                    <label for="">Precio</label>
+                    <input type="number" name="precio" id="precio">
+                </div>
+            </div>
+
+            <div class="field">
+                <button type="submit" class="fluid ui inverted green button">Guardar información del Producto</button>
+            </div>
+
+        </form>
+    </div>
+
+{% include 'Inc/footer.html' %}

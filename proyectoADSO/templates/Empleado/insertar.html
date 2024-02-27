@@ -1,0 +1,82 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+    <h1 style="text-align: center;">Formulario - Planilla de Empleados</h1>
+    <form action="" method="POST" class="ui form">
+        {% csrf_token %}
+        <div class="three fields">
+            <div class="field">
+                <label for="">Nombre del Empleado</label>
+                <input type="text" name="nombre_emp" id="nombre_emp">
+
+            </div>
+            <div class="field">
+                <label for="">Apellido del Empleado</label>
+                <input type="text" name="apellido_emp" id="apellido_emp">
+            </div>
+            <div class="field">
+                <label for="">Días trabajados</label>
+                <input type="number" name="dias_trabajados" id="dias_trabajados">
+
+            </div>
+        </div>
+        <div class="two fields">
+            <div class="field">
+                <label for="">Genero del Empleado</label>
+                <select class="ui dropdown" name="genero_emp" id="genero_emp">
+                    <option>MASCULINO</option>
+                    <option>FEMENINO</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="">Celular del Empelado</label>
+                <input type="number" name="celular_emp" id="celular_emp">
+            </div>
+        </div>
+        <div class="three fields">
+            <div class="field">
+                <label for="">Correo del Empleado</label>
+                <input type="email" name="correo_emp" id="correo_emp">
+
+            </div>
+            <div class="field">
+                <label for="">Departamento del Empleado</label>
+                <input type="text" name="departamento" id="departamento">
+            </div>
+            <div class="field">
+                <label for="">Nro. Documento del Empleado</label>
+                <input type="text" name="documento_emp" id="documento_emp">
+
+            </div>
+        </div>
+        <div class="three fields">
+            <div class="field">
+                <label for="">Cuenta Bancaria</label>
+                <input type="text" name="cuenta_bancaria" id="cuenta_bancaria">
+
+            </div>
+            <div class="field">
+                <label for="">Tipo de Cuenta</label>
+                <select class="ui dropdown" name="tipo_cuenta" id="tipo_cuenta">
+                    <option>AHORROS</option>
+                    <option>CORRIENTE</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="">Cargo a Desempeñar</label>
+                <select class="ui dropdown" name="cargo_id" id="cargo_id">
+                    {% for c in cargos %}
+                    <option value="{{ c.id }}">{{ c.nombre }} (${{ c.salario }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="fluid ui inverted green button"><a href=""></a>Guardar Planilla del Empleado</button>
+    </form>
+</div>
+
+
+{% include 'Inc/footer.html' %}
+
+

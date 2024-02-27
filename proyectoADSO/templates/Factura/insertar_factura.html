@@ -1,0 +1,148 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+    <h1 style="text-align: center;">Insertar una Factura</h1>
+
+    <hr>
+    <form action="" method="POST" class="ui form">
+        {% csrf_token %}
+
+        <div class="field">
+            <label for=""><h2 style="text-align: center;">Digite la cédula del Empleado</h2></label>
+            <input type="number" name="documento_emp" id="documento_emp">
+        </div>
+
+        <div class="field">
+            <button type="button" onclick="consumirAPI()" class="fluid ui inverted green button">Consultar</button>
+        </div>
+
+        <div class="two fields">
+            <div class="field">
+                <h2 id="nombre_emp">Nombre del Empleado: </h2>
+            </div>
+            <div class="field">
+                <h2 id="apellido_emp">Apellido del Empleado: </h2>
+            </div>
+        </div>
+        <div class="two fields">
+            <div class="field">
+                <h2 id="celular_emp">Celular del Empleado: </h2>
+            </div>
+            <div class="field">
+                <h2 id="cargo">Cargo del Empleado: </h2>
+            </div>
+        </div>
+        
+        <hr>
+        <div class="three fields">
+            <div class="field">
+                <label for="">Listado de Productos</label>
+                <select class="ui search dropdown" name="productos" id="productos" onclick="consumirAPI()">
+                    {% for p in productos %}
+                    <option value='{{ p.id }}'>{{ p.nombre }} - {{ p.precio }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="field">
+                <label for="">Cantidad del Producto</label>
+                <input type="number" name="cantidad" id="cantidad">
+            </div>
+
+            <div class="field">
+                <label for="" >.</label>
+                <button onclick="Agregaralatabla()" type="button" class="fluid ui inverted green button">Agregar Producto</button>
+            </div>
+        </div>
+
+        <hr>
+        <table class="ui green celled table">
+            <thead>
+                <th>#</th>
+                <th>Nombre del Producto</th>
+                <th>Cantidad del Producto</th>
+                <th>Precio del Producto</th>
+                <th>Total del Producto</th>
+                <th>Acciones</th>
+            </thead>
+
+            <tbody id="tablabody">
+                
+            </tbody>
+
+        </table>
+        <h2 name="totalFactura" id="totalFactura"><input type='hidden' name='totalFactura'></h2>
+
+
+        <div class="field">
+            <button type="submit" class="fluid ui inverted green button">Guardar Factura</button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+
+
+    total_factura=0
+    contador=0
+
+    function consumirAPI(){
+        var cedula = document.getElementById('documento_emp').value
+        var url = "/Empleado/API/" + cedula
+        fetch(url)
+        .then(data => data.json())
+        .then(data => {
+            console.log(data)
+                if(data.length == 0){
+                    alert("No se encontró un Empleado con esa Cédula")
+                    document.getElementById('nombre_emp').innerHTML = "Nombre del Empleado: " + data[0].fields.nombre_emp
+                    document.getElementById('apellido_emp').innerHTML = "Apellido del Empleado: " + data[0].fields.apellido_emp
+                    document.getElementById('celular_emp').innerHTML = "Celular del Empleado: " + data[0].fields.celular_emp
+                    document.getElementById('cargo').innerHTML = "Cargo del Empleado: " + data[0].fields.cargo
+                }
+                else{
+                    document.getElementById('nombre_emp').innerHTML = "Nombre del Empleado: " + data[0].fields.nombre_emp
+                    document.getElementById('apellido_emp').innerHTML = "Apellido del Empleado: " + data[0].fields.apellido_emp
+                    document.getElementById('celular_emp').innerHTML = "Celular del Empleado: " + data[0].fields.celular_emp
+                    document.getElementById('cargo').innerHTML = "Cargo del Empleado: " + data[0].fields.cargo
+            }
+        })
+    }
+
+    function Agregaralatabla(){
+
+        contador = contador + 1
+
+        var producto = $('#productos option:selected').text();
+        var cantidad = document.getElementById('cantidad').value;
+        var producto_separado = producto.split(" - ",2);
+        var prod_id = document.getElementById('productos').value
+
+        var precio_prod = producto_separado[1]
+        var p_total = precio_prod * cantidad
+        total_factura = total_factura + p_total;
+        document.getElementById('totalFactura').innerHTML = "El precio TOTAL de la factura es: $" + total_factura + " COP" + "<input type='hidden' name='totalFactura' value='"+total_factura+"'>";
+
+        $('#tablabody').append("\
+        <tr id='fila"+contador+"'>\
+            <td>"+contador+"</td>\
+            <td><input type='hidden' name='prod_id[]' value='"+prod_id+"'>"+producto_separado[0]+"</td>\
+            <td><input type='hidden' name='cantidadProducto[]' value='"+cantidad+"'>"+cantidad+"</td>\
+            <td>"+producto_separado[1]+"</td>\
+            <td>"+p_total+"</td>\
+            <td><button type='button' onclick='borrarfila("+contador+")' class='ui fluid inverted green button'>Eliminar</button></td>\
+        </tr>")
+
+    }
+
+    function borrarfila(fila){
+
+        $("#fila"+fila+"").remove();
+
+    }
+
+</script>
+
+{% include 'Inc/footer.html' %}

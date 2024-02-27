@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Craftsman Gold - Ecommerce</title>
+    <link rel="stylesheet" href="{% static 'css/semantic.min.css' %}">
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/semantic.min.js' %}"></script>
+</head>
+
+<body>
+
+    <div class="ui stackable menu">
+        <div class="item">
+            <i class="globe icon"></i>
+            <div class="ui dropdown item">
+                Sección de Cargos
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a href="/Cargo/Insertar/" class="item">Insertar Cargo</a>
+                    <a href="/Cargo/Listado/" class="item">Listado de Cargos</a>
+                </div>
+            </div>
+
+            <div class="ui dropdown item">
+                Sección de Empleados
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a href="/Empleado/Insertar/" class="item">Insertar Empleado</a>
+                    <a href="/Empleado/Listado/" class="item">Listado de Empleados</a>
+                </div>
+            </div>
+
+            <div class="ui dropdown item">
+                Sección de Productos
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a href="/Productos/Insertar/" class="item">Insertar Producto</a>
+                    <a href="/Productos/Listado/" class="item">Listado de Productos</a>
+                </div>
+            </div>
+
+            <div class="ui dropdown item">
+                Sección de Factura y Reportes
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a href="/Factura/Insertar/" class="item">Insertar Factura</a>
+                    <a href="/Reportes/Generar/" class="item">Generar Reportes</a>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="right menu">
+            <a href="/Usuario/Insertar/" class="item">Registro</a>
+            <a href="/Usuario/Ingreso/" class="item">Ingreso</a>
+            <a href="/Usuario/Logout/" class="item">Log Out</a>
+        </div>
+    </div>

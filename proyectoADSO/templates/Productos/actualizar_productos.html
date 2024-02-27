@@ -1,0 +1,25 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+    <div class="ui container">
+        <h1 style="text-align: center;">Formulario de Actualización de Productos</h1>
+        <form action="" method="POST" class="ui form">
+            {% csrf_token %}
+            {% for c in unproducto %}
+            <div class="two fields">
+                <div class="field">
+                    <label for="">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" value="{{c.nombre}}">
+
+                </div>
+                <div class="field">
+                    <label for="">Precio</label>
+                    <input type="text" name="precio" id="precio" value="{{c.precio}}">
+                </div>
+            </div>
+            {% endfor %}
+            <button type="submit" class="ui inverted green button">Guardar información</button>
+        </form>
+    </div>
+
+{% include 'Inc/footer.html' %}

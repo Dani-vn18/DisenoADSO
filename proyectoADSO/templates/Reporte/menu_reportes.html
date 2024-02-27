@@ -1,0 +1,114 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+
+
+<div class="ui container centered">
+
+    <h1 style="text-align: center;">
+        
+        Bienvenido al Menú de Reportes.
+
+    </h1>
+
+    <h1 style="text-align: center;">
+        
+        Aquí vas a encontrar todas las clases de Reportes que se pueden realizar.
+
+    </h1>
+
+    <hr>
+
+    <div class="ui centered link cards">
+
+        <div class="card">
+            <a class="image" style="text-align: center;" href="/Reportes/Generar/Diario/">
+                <i class="file pdf outline icon massive red"></i>
+            </a> 
+            <div class="content">
+                <a class="header" style="text-align: center;" href="/Reportes/Generar/Diario/">Reporte Diario</a>
+                <div class="meta">
+                    <a href="/Reportes/Generar/Diario/">
+                        Aquí podrás ingresar la fecha que vas a consultar
+                        y generar un PDF con la información de 
+                        Todas las facturas asociadas a esa fecha.
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <a class="image" style="text-align: center;" href="/Reportes/Generar/Mensual/">
+                <i class="file pdf outline icon massive red"></i>
+            </a> 
+            <div class="content">
+                <a class="header" style="text-align: center;" href="/Reportes/Generar/Mensual/">Reporte Mensual</a>
+                <div class="meta">
+                    <a href="/Reportes/Generar/Mensual/">
+                        Aquí podrás ingresar la fecha que vas a consultar
+                        y generar un PDF con la información de 
+                        Todas las facturas asociadas al mes seleccionado.
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <a class="image" style="text-align: center;" href="/Reportes/Generar/Anual/">
+                <i class="file pdf outline icon massive red"></i>
+            </a> 
+            <div class="content">
+                <a class="header" style="text-align: center;" href="/Reportes/Generar/Anual/">Reporte Anual</a>
+                <div class="meta">
+                    <a href="/Reportes/Generar/Anual/">
+                        Aquí podrás ingresar la fecha que vas a consultar
+                        y generar un PDF con la información de 
+                        Todas las facturas asociadas al año seleccionado.
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <div class="ui centered link cards">
+
+        <div class="ui centered card">
+            <a class="image" style="text-align: center;" href="/Reportes/Generar/General/">
+                <i class="file pdf outline icon massive red"></i>
+            </a> 
+            <div class="content">
+                <a class="header" style="text-align: center;" href="/Reportes/Generar/General/">Reporte GENERAL</a>
+                <div class="meta">
+                    <a href="/Reportes/Generar/General/">
+                        Aquí podrás ingresar la fecha que vas a consultar
+                        y generar un PDF con la información de 
+                        TODO el histórico facturado.
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="ui centered card">
+            <a class="image" style="text-align: center;" href="/Reportes/Consultar/Factura/">
+                <i class="file pdf outline icon massive red"></i>
+            </a> 
+            <div class="content">
+                <a class="header" style="text-align: center;" href="/Reportes/Consultar/Factura/">Consultar Facturas</a>
+                <div class="meta">
+                    <a href="/Reportes/Consultar/Factura/">
+                        Aquí podrás con el numero de factura que vas a consultar
+                        generar un PDF con la información de 
+                        TODO elemento asociado con lo facturado.
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% include 'Inc/footer.html' %}

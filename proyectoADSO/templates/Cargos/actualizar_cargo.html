@@ -1,0 +1,46 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+    <div class="ui container">
+        <h1 style="text-align: center;">Formulario de registro de Cargos</h1>
+        <form action="" method="POST" class="ui form">
+            {% csrf_token %}
+            {% for v in uncargo %}
+            <div class="two fields">
+                <div class="field">
+                    <label for="">Nombre del Cargo</label>
+                    <input type="text" name="nombre" id="nombre" value="{{ v.nombre }}">
+
+                </div>
+                <div class="field">
+                    <label for="">Salario del Cargo</label>
+                    <input type="number" name="salario" id="salario" value="{{ v.salario }}">
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label for="">Turno Laboral</label>
+                    <select class="ui dropdown" name="turno_laboral" id="turno_laboral" value="{{ v.turno_laboral }}">
+                        <option>DIURNO</option>
+                        <option>NOCTURNO</option>
+                        <option>MIXTO</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="">Rotación Laboral</label>
+                    <select class="ui dropdown" name="rotacion_laboral" id="rotacion_laboral" value="{{ v.rotacion_laboral }}">
+                        <option>SI</option>
+                        <option>NO</option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label for="">Descripción del Cargo</label>
+                <input type="text" name="descripcion" id="descripcion" value="{{ v.descripcion }}">
+            </div>
+            {% endfor %}
+            <button type="submit" class="ui inverted green button">Guardar información</button>
+        </form>
+    </div>
+
+{% include 'Inc/footer.html' %}

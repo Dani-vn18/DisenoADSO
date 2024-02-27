@@ -1,0 +1,75 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+
+    <h1 style="text-align: center;">Listado de Productos</h1>
+
+    <table class="ui green celled table">
+        <thead>
+            <tr>
+                <th>Nombre del Producto</th>
+                <th>Precio del Producto</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in productos %}
+            <tr>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.precio }}</td>
+                <td>
+                    <a href="#" onclick="borrar('{{ p.id }}')"><i class="trash alternate outline icon"></i></a>
+                    <a href="#" onclick="editar('{{ p.id }}')"><i class="pencil alternate icon"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% include 'Inc/footer.html' %}
+
+
+<script>
+    function borrar(id) {
+        swal({
+            title: "Esta seguro que desea borrar?",
+            text: "La informacion que borres NO se puede recuperar.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                        location.href = "/Productos/Borrar/"+id;
+                } else {
+                    swal("La informacion no se ha borrado.");
+                }
+            });
+    }
+</script>
+
+<script>
+    function editar(id) {
+        swal({
+            title: "Esta seguro que desea editar el registro?",
+            text: "La informacion que edites tendra la informacion del ultimo registro.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                        location.href = "/Productos/Edicion/"+id;
+                } else {
+                    swal("La informacion no se ha editado.");
+                }
+            });
+    }
+</script>
+
+
+<script src='{% static "js/sweetalert.min.js" %}'>
+
+</script>

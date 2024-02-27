@@ -1,0 +1,245 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+
+    <h1 style="text-align: center;">Estás en el apartado para Consultar Facturas</h1>
+
+    <hr>
+
+    <div class="three fields">
+
+        <div class="field">
+
+            <h3 style="text-align: center;">Digite el Número de la Factura a Consultar</h3>
+            <br>
+
+        </div>
+
+        <div class="field">
+
+            <div class="fluid ui input">
+
+                <input type="number" min="1" id="fac_id" name="fac_id" onchange="validarNumero()">
+
+            </div>
+
+            <button onclick="traerFactura()" type="button" class="fluid ui inverted green button">Consultar Factura</button>
+
+        </div>
+
+    </div>
+
+    <br>
+    <hr>
+
+    <h1 style="text-align: center;">La información del reporte generado es</h1>
+
+    <table class="ui green celled table">
+
+        <tbody id="tablabody">
+
+        </tbody>
+
+    </table>
+
+
+
+</div>
+
+<script>
+    const validarNumero = () => {
+    const numero = document.getElementById("fac_id").value;
+
+    if (Number.isNaN(numero) || !/^\d+$/.test(numero)) {
+        alert("El número ingresado no es válido.");
+        document.getElementById("f_id").focus();
+    }
+    };
+</script>
+
+<script>
+    let ventasDia = 0;
+    let contador = 0;
+    
+    const traerFactura = async () => {
+        contador++;
+        
+        const f_id = document.getElementById("fac_id").value;
+        console.log(f_id);
+
+        try {
+            const response = await fetch('/Reportes/Consultar/Factura/' + f_id);
+            const data = await response.json();
+
+            const { empleado, factura, detalle } = data;
+
+            const nombreEmpleado = empleado[0].factura_id__empleado_id__nombre_emp;
+            const apellidoEmpleado = empleado[0].factura_id__empleado_id__apellido_emp;
+            const documentoEmpleado = empleado[0].factura_id__empleado_id__documento_emp;
+            const nombreCargo = empleado[0].factura_id__empleado_id__cargo_id__nombre;
+            
+            const totalFactura = factura[0].factura_id__total;
+
+            // Obtener información del detalle
+            let productosHtml = "";
+            let preciosHtml = "";
+            let cantidadesHtml = "";
+            for (const producto of detalle) {
+                productosHtml += `<li>${producto.producto_id__nombre}</li>`;
+                preciosHtml += `<li>($${producto.producto_id__precio} COP)</li>`;
+                cantidadesHtml += `<li>${producto.cantidad}</li>`;
+            }
+        
+            // Construir el HTML de la fila
+            const filaHtml = `
+                <thead id='cabecera' name='cabecera'>
+                    <tr>
+                        <th># Factura</th>
+                        <th>Nombre Emp</th>
+                        <th>Documento Emp</th>
+                        <th>Cargo</th>
+                        <th>Nombre Producto</th>
+                        <th>Precio Producto</th>
+                        <th>Cantidad Producto</th>
+                        <th>Total Factura</th>
+                    </tr>
+                </thead>
+                <tr id='fac_pdf' name='fac_pdf'>
+                <td id='id_fac' name='id_fac' rowspan='2'>${f_id}</td>
+                <td id='nom_empleado' name='nom_empleado'>${nombreEmpleado} ${apellidoEmpleado}</td>
+                <td id='doc_empleado' name='doc_empleado'>${documentoEmpleado}</td>
+                <td id='car_empleado' name='car_empleado'>${nombreCargo}</td>
+                <td id='productos' name='productos' colspan='1'>
+                    <ul>
+                    ${productosHtml}
+                    </ul>
+                </td>
+                <td id='precios' name='precios' colspan='1'>
+                    <ul>
+                    ${preciosHtml}
+                    </ul>
+                </td>
+                <td id='cantidades' name='cantidades' colspan='1'>
+                    <ul>
+                    ${cantidadesHtml}
+                    </ul>
+                </td>
+                <td id='total' name='total'>$ ${totalFactura}COP</td>
+                <td id='boton_pdf' name='boton_pdf'><i class="file pdf outline icon large" href="#" id="icono_pdf" name="icono_pdf"></i></td>
+                </tr>
+            `;
+        
+            $('#tablabody').append(filaHtml);
+
+            const icono_pdf = document.getElementById('icono_pdf');
+            icono_pdf.addEventListener('click', generarPDF);
+
+            async function generarPDF() {
+
+                const tituloPdf = document.querySelector('thead#cabecera');
+                const detallePdf = document.querySelector('tr#fac_pdf');
+
+                const copia_detallePdf = detallePdf
+
+                // Si la fila no existe, mostrar un mensaje de error
+                if (!detallePdf) {
+                    console.error('Detalle con ID "fac_pdf" no encontrada.');
+                    return;
+                }
+                
+                // Eliminar la columna con el botón de PDF
+                const tdEliminar = copia_detallePdf.querySelector('td#boton_pdf');
+                if (tdEliminar) {
+                    tdEliminar.parentNode.removeChild(tdEliminar);
+                }
+                // Convertir la fila HTML a una imagen
+                const canvas_1 = await html2canvas(
+                tituloPdf,
+                {
+                    scale: 2,
+                }
+                );
+
+                const canvas_2 = await html2canvas(
+                copia_detallePdf,
+                {
+                    scale: 2,
+                }
+                );
+
+                const imgData_1 = canvas_1.toDataURL('image/jpeg');
+                const imgData_2 = canvas_2.toDataURL('image/jpeg');
+                // Convertir la fila HTML a un documento PDF
+                const docDefinition = {
+                    pageSize: 'A4',
+                    header: {
+                        text: 'Reporte generado el día: ',
+                        style: 'header'
+                    },
+                    footer: {
+                        text: 'Próximamente Tablero de Analítica y Predictiva',
+                        style: 'footer'
+                    },
+                    marginLeft: 10, // Margen izquierdo de 10mm
+                    marginRight: 10, // Margen derecho de 20mm
+                    marginTop: 50, // Margen superior de 30mm
+                    marginBottom: 50,
+                    pageOrientation: 'landscape',
+                    content: [
+                    {
+                        image: imgData_1,
+                        width: 750,
+                        height: 120,
+                    },
+                    {
+                        image: imgData_2,
+                        width: 750,
+                        height: 170,
+                    }
+                    ],
+                };
+                const pdf = pdfMake.createPdf(docDefinition);
+                // Descargar el PDF
+                pdf.download('factura.pdf');
+                // Mostrar un mensaje de éxito
+                alert('PDF generado exitosamente!');
+
+            }
+            
+
+        } catch (error) {
+            console.error('Error al obtener los datos:', error);
+        }
+    }
+</script>
+
+
+<script>
+                
+    async function convertirHtmlAImagen(html) {
+
+        const canvas = await html2canvas(html, {
+            scale: 2,
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg');
+
+        return imgData;
+    }
+
+    async function generar_PDF(imgData) {
+        const link = document.createElement('a');
+        link.href = imgData;
+        link.download = 'factura.pdf';
+        link.click();
+    }
+
+</script>
+
+<script src="{% static 'js/html2canvas.min.js' %}"></script>
+<script src="{% static 'js/pdfmake.min.js' %}"></script>
+<script src="{% static 'js/pdfmake.min.js.map' %}"></script>
+<script src="{% static 'js/vfs_fonts.min.js' %}"></script>
+
+{% include 'Inc/footer.html' %}

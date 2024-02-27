@@ -1,0 +1,26 @@
+{% load static %}
+{% include 'Inc/header.html' %}
+
+<div class="ui container">
+    <h1>Ingresar al Sistema</h1>
+    <form action="" method="POST" class="ui form">
+        {% csrf_token %}
+        <div class="two fields">
+            <div class="field">
+                <label for="">Nombre de Usuario</label>
+                <input type="text" name="username" id="username">
+            </div>
+            <div class="field">
+                <label for="">Contraseña</label>
+                <input type="password" name="password" id="password">
+            </div>
+        </div>
+        <h3 style="color: red;">
+                {{ mensaje }}
+        </h3>
+        <button type="submit" class="ui inverted green button">Iniciar Sesión</button>
+    </form>
+</div>
+
+
+{% include 'Inc/footer.html' %}
