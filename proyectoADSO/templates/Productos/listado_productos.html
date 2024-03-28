@@ -34,7 +34,7 @@
 <script>
     function borrar(id) {
         swal({
-            title: "Esta seguro que desea borrar?",
+            title: "¿Está seguro que desea borrar el registro?",
             text: "La informacion que borres NO se puede recuperar.",
             icon: "warning",
             buttons: true,
@@ -42,9 +42,9 @@
         })
             .then((willDelete) => {
                 if (willDelete) {
-                        location.href = "/Productos/Borrar/"+id;
+                    swal("La información NO se puede borrar ACTUALMENTE.");
                 } else {
-                    swal("La informacion no se ha borrado.");
+                    swal("Has cancelado el borrado.");
                 }
             });
     }
@@ -53,17 +53,17 @@
 <script>
     function editar(id) {
         swal({
-            title: "Esta seguro que desea editar el registro?",
-            text: "La informacion que edites tendra la informacion del ultimo registro.",
+            title: "¿Está seguro que desea editar el registro?",
+            text: "La informacion que edites tendra el último valor asignado.",
             icon: "warning",
             buttons: true,
             dangerMode: true,
         })
             .then((willDelete) => {
                 if (willDelete) {
-                        location.href = "/Productos/Edicion/"+id;
+                    swal("La información NO se puede editar ACTUALMENTE.");
                 } else {
-                    swal("La informacion no se ha editado.");
+                    swal("Has cancelado la edición.");
                 }
             });
     }

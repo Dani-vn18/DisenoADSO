@@ -10,10 +10,7 @@
         <table class="ui green celled table">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Días Trabajados</th>
-                    <th>Salario Esperado</th>
+                    <th>Nombre Completo</th>
                     <th>Género</th>
                     <th>Celular</th>
                     <th>Correo</th>
@@ -28,8 +25,7 @@
             <tbody>
                 {% for c in empleados %}
                 <tr>
-                    <td>{{ c.1 }}</td>
-                    <td>{{ c.2 }}</td>
+                    <td>{{ c.1 }} {{ c.2 }}</td>
                     <td>{{ c.3 }}</td>
                     <td>{{ c.4 }}</td>
                     <td>{{ c.5 }}</td>
@@ -38,12 +34,9 @@
                     <td>{{ c.8 }}</td>
                     <td>{{ c.9 }}</td>
                     <td>{{ c.10 }}</td>
-                    <td>{{ c.11 }}</td>
-                    <td>{{ c.12 }}</td>
                     <td>
                         <a href="#" onclick="borrarEmpleado('{{ c.0 }}')"><i class="trash alternate outline icon"></i></a>
                         <a href="#" onclick="editarEmpleado('{{ c.0 }}')"><i class="pencil alternate icon"></i></a>
-                        <a href="#" onclick="cargarSalario('{{ c.0 }}')"><i class="dollar sign icon"></i></a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -60,7 +53,7 @@
 <script>
     function borrarEmpleado(idempleado) {
         swal({
-            title: "Esta seguro que desea borrar?",
+            title: "¿Está seguro que desea borrar?",
             text: "La informacion que borres NO se puede recuperar.",
             icon: "warning",
             buttons: true,
@@ -68,9 +61,9 @@
         })
             .then((willDelete) => {
                 if (willDelete) {
-                        location.href = "/Empleado/Listado/Borrar/"+idempleado;
+                    swal("La información NO se puede borrar ACTUALMENTE.");
                 } else {
-                    swal("La informacion no se ha borrado.");
+                    swal("Has cancelado el borrado.");
                 }
             });
     }
@@ -79,36 +72,17 @@
 <script>
     function editarEmpleado(idempleado) {
         swal({
-            title: "Esta seguro que desea editar el registro?",
-            text: "La informacion que edites tendra la informacion del ultimo registro.",
+            title: "¿Está seguro que desea editar el registro?",
+            text: "La informacion que edites tendra el último valor asignado.",
             icon: "warning",
             buttons: true,
             dangerMode: true,
         })
             .then((willDelete) => {
                 if (willDelete) {
-                        location.href = "/Empleado/Listado/Edicion/"+idempleado;
+                    swal("La informacion NO se puede editar ACTUALMENTE.");
                 } else {
-                    swal("La informacion no se ha editado.");
-                }
-            });
-    }
-</script>
-
-<script>
-    function cargarSalario(id) {
-        swal({
-            title: "Vas a cargar el salario del ID: "+id,
-            text: "Se guardará la información dentro de la BD.",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-        })
-            .then((willDelete) => {
-                if (willDelete) {
-                        location.href = "/Empleado/CSal/"+id;
-                } else {
-                    swal("No se ha cargado el Salario.");
+                    swal("Has cancelado la edición.");
                 }
             });
     }

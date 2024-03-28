@@ -16,24 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from proyectoADSO.views import mostrarIndex, insertarCargo, listadoCargos , borrarCargo, edicionCargo ,insertarEmpleado, listadoEmpleados, borrarEmpleados, edicionEmpleados, cargarSalario, insertarUsuario, ingresoUsuario, logoutUsuario, insertarFactura, insertarProducto, listadoProductos, edicionProductos, borrarProductos, empleadoAPI, menuReportes, consultarFactura, consultar_factura_API, reporteDiario, reporteD_API, reporteD_DETALLE_API, reporteGeneral, reporteMensual, reporteM_API, reporteAnual, reporteA_API
+from proyectoADSO.views import mostrarIndex, insertarCargo, listadoCargos, insertarEmpleado, listadoEmpleados, insertarUsuario, ingresoUsuario, logoutUsuario, insertarFactura, insertarProducto, listadoProductos, empleadoAPI, menuReportes, consultarFactura, consultar_factura_API, reporteDiario, reporteD_API, reporteD_DETALLE_API, reporteGeneral, reporteMensual, reporteM_API, reporteAnual, reporteA_API
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', mostrarIndex),
     path('Cargo/Insertar/', insertarCargo),
     path('Cargo/Listado/', listadoCargos),
-    path('Cargo/Listado/Borrar/<int:id>', borrarCargo),
-    path('Cargo/Listado/Edicion/<int:id>', edicionCargo),
+    #path('Cargo/Listado/Borrar/<int:id>', borrarCargo), ACTUALMENTE DESHABILITADOS PARA EVITAR CAMBIOS EN LAS FACTURAS
+    #path('Cargo/Listado/Edicion/<int:id>', edicionCargo), ACTUALMENTE DESHABILITADOS PARA EVITAR CAMBIOS EN LAS FACTURAS
     path('Empleado/Insertar/', insertarEmpleado),
     path('Empleado/Listado/', listadoEmpleados),
-    path('Empleado/Listado/Borrar/<int:idempleado>', borrarEmpleados),
-    path('Empleado/Listado/Edicion/<int:id>', edicionEmpleados),
-    path('Empleado/CSal/<int:id>', cargarSalario),
+    #path('Empleado/Listado/Borrar/<int:idempleado>', borrarEmpleados), ACTUALMENTE DESHABILITADOS PARA EVITAR CAMBIOS EN LAS FACTURAS
+    #path('Empleado/Listado/Edicion/<int:id>', edicionEmpleados), ACTUALMENTE DESHABILITADOS PARA EVITAR CAMBIOS EN LAS FACTURAS
     path('Productos/Insertar/', insertarProducto),
     path('Productos/Listado/', listadoProductos),
-    path('Productos/Borrar/<int:id>', borrarProductos),
-    path('Productos/Edicion/<int:id>', edicionProductos),
+    #path('Productos/Borrar/<int:id>', borrarProductos), ACTUALMENTE DESHABILITADOS PARA EVITAR CAMBIOS EN LAS FACTURAS
+    #path('Productos/Edicion/<int:id>', edicionProductos), ACTUALMENTE DESHABILITADOS PARA EVITAR CAMBIOS EN LAS FACTURAS
     path('Usuario/Insertar/', insertarUsuario),
     path('Usuario/Ingreso/', ingresoUsuario),
     path('Usuario/Logout/', logoutUsuario),

@@ -51,6 +51,10 @@ def listadoCargos(request):
         return redirect('/Usuario/Ingreso/')
 
 
+
+"""
+ACTUALMENTE DESHABILITADOS PARA EVITAR CAMBIOS EN LAS FACTURAS.
+
 def borrarCargo(request, id):
     
     if request.user.is_authenticated:
@@ -90,7 +94,8 @@ def edicionCargo(request, id):
     else:
         
         return redirect('/Usuario/Ingreso/')
-    
+
+"""
 
 #endregion
 
@@ -103,38 +108,14 @@ def insertarEmpleado(request):
     if request.user.is_authenticated:
         
         if request.method=="POST":
-            if request.POST.get('nombre_emp') and request.POST.get('apellido_emp') and request.POST.get('dias_trabajados') and request.POST.get('genero_emp') and request.POST.get('celular_emp') and request.POST.get('correo_emp') and request.POST.get('departamento') and request.POST.get('documento_emp') and request.POST.get('cuenta_bancaria') and request.POST.get('tipo_cuenta') and request.POST.get('cargo_id'):
+            if request.POST.get('nombre_emp') and request.POST.get('apellido_emp') and request.POST.get('genero_emp') and request.POST.get('celular_emp') and request.POST.get('correo_emp') and request.POST.get('departamento') and request.POST.get('documento_emp') and request.POST.get('cuenta_bancaria') and request.POST.get('tipo_cuenta') and request.POST.get('cargo_id'):
                 insertar = connection.cursor()
-                insertar.execute("call insertarEmpleado('"+ request.POST.get('nombre_emp') +"','"+ request.POST.get('apellido_emp') +"','"+ request.POST.get('dias_trabajados') +"','" + request.POST.get('genero_emp') +"','"+ request.POST.get('celular_emp') +"','"+ request.POST.get('correo_emp') +"','"+ request.POST.get('departamento') +"','"+ request.POST.get('documento_emp') +"','"+ request.POST.get('cuenta_bancaria') +"','"+ request.POST.get('tipo_cuenta') +"','"+ request.POST.get('cargo_id')+"')")
+                insertar.execute("call insertarEmpleado('"+ request.POST.get('nombre_emp') +"','"+ request.POST.get('apellido_emp') +"','" + request.POST.get('genero_emp') +"','"+ request.POST.get('celular_emp') +"','"+ request.POST.get('correo_emp') +"','"+ request.POST.get('departamento') +"','"+ request.POST.get('documento_emp') +"','"+ request.POST.get('cuenta_bancaria') +"','"+ request.POST.get('tipo_cuenta') +"','"+ request.POST.get('cargo_id')+"')")
             return redirect('/Empleado/Listado/')
         else:
             cargos = Cargo.objects.all()
             return render(request, 'Empleado/insertar.html',{'cargos':cargos})
         
-    else:
-        
-        return redirect('/Usuario/Ingreso/')
-    
-
-def cargarSalario(request, id):
-    
-    if request.user.is_authenticated:
-        
-        if request.method=="POST":
-            if request.POST.get('id') and request.POST.get('cargo_id'):
-        
-                cargar_sal = connection.cursor()
-                cargar_sal.execute("call calcularSalario('"+ request.POST.get('id') +"','"+ request.POST.get('cargo_id')+"')")
-                return redirect('/Empleado/Listado/')
-        
-            return redirect('/Empleado/Listado/')
-            
-        else:
-            
-            cargo_emp = Cargo.objects.all()
-            info_emp = Empleado.objects.get(id=id)
-            return render(request, 'Empleado/cargar_salario.html', {'info_emp': info_emp, 'cargo_emp': cargo_emp})
-
     else:
         
         return redirect('/Usuario/Ingreso/')
@@ -153,6 +134,9 @@ def listadoEmpleados(request):
         
         return redirect('/Usuario/Ingreso/')
 
+
+"""
+ACTUALMENTE DESHABILITADOS PARA EVITAR CAMBIOS EN LAS FACTURAS.
 
 def borrarEmpleados(request, idempleado):
     
@@ -188,7 +172,8 @@ def edicionEmpleados(request, id):
     else:
         
         return redirect('/Usuario/Ingreso/')
-    
+
+"""
 
 #endregion
 
@@ -230,26 +215,45 @@ def logoutUsuario(request):
 
 def insertarProducto(request):
     
-    if request.method=="POST":
-        if request.POST.get('nombre') and request.POST.get('precio'):
-            producto = Producto()
-            producto.nombre = request.POST.get('nombre')
-            producto.precio = request.POST.get('precio')
-            producto.save()
+    
+    if request.user.is_authenticated:
+        
+        if request.method=="POST":
             
-            return redirect("/Productos/Listado/")
+            if request.POST.get('nombre') and request.POST.get('precio'):
+                
+                producto = Producto()
+                producto.nombre = request.POST.get('nombre')
+                producto.precio = request.POST.get('precio')
+                producto.save()
+            
+                return redirect("/Productos/Listado/")
+            
+        else:
+                
+            return render(request, 'Productos/insertar_productos.html')
+
     else:
-        return render(request, 'Productos/insertar_productos.html')
+        
+        return redirect('/Usuario/Ingreso/')
     
     
     
 def listadoProductos(request):
     
-    productos = Producto.objects.all()
+    if request.user.is_authenticated:   
     
-    return render(request,'Productos/listado_productos.html', {'productos': productos})
+        productos = Producto.objects.all()
+    
+        return render(request,'Productos/listado_productos.html', {'productos': productos})
+    
+    else:
+        
+        return redirect('/Usuario/Ingreso/')
 
 
+"""
+ACTUALMENTE DESHABILITADOS PARA EVITAR CAMBIOS EN LAS FACTURAS.
 
 def borrarProductos(request, id):
     
@@ -272,6 +276,8 @@ def edicionProductos(request, id):
     else:
         unproducto=Producto.objects.filter(id=id)
         return render(request, 'Productos/actualizar_productos.html',{'unproducto':unproducto})
+        
+"""
 
 #endregion
 
@@ -279,38 +285,44 @@ def edicionProductos(request, id):
 
 def insertarFactura(request):
     
-    if request.method=="POST":
+    if request.user.is_authenticated:
+    
+        if request.method=="POST":
         
-        if request.POST.get('documento_emp') and request.POST.get('cantidadProducto[]') and request.POST.get('prod_id[]'):
+            if request.POST.get('documento_emp') and request.POST.get('cantidadProducto[]') and request.POST.get('prod_id[]'):
             
-            cantidad= request.POST.getlist('cantidadProducto[]')
-            productoID = request.POST.getlist('prod_id[]')
-            fecha = date.today()
+                cantidad= request.POST.getlist('cantidadProducto[]')
+                productoID = request.POST.getlist('prod_id[]')
+                fecha = date.today()
             
-            factura = Factura()
-            idemp = request.POST.get('documento_emp')
-            factura.empleado = Empleado.objects.get(documento_emp=idemp)
-            factura.fecha = fecha
-            factura.total = request.POST.get('totalFactura')
-            factura.save()
-            idfactura = Factura.objects.all().last()
+                factura = Factura()
+                idemp = request.POST.get('documento_emp')
+                factura.empleado = Empleado.objects.get(documento_emp=idemp)
+                factura.fecha = fecha
+                factura.total = request.POST.get('totalFactura')
+                factura.save()
+                idfactura = Factura.objects.all().last()
             
-            for p in range(0, len(productoID), 1):
-                facturahashproducto = FacturahashProducto()
-                facturahashproducto.cantidad = cantidad[p]
-                facturahashproducto.producto = Producto.objects.get(id=productoID[p])
-                facturahashproducto.factura = Factura.objects.get(id=idfactura.id)
-                facturahashproducto.save()
+                for p in range(0, len(productoID), 1):
+                    facturahashproducto = FacturahashProducto()
+                    facturahashproducto.cantidad = cantidad[p]
+                    facturahashproducto.producto = Producto.objects.get(id=productoID[p])
+                    facturahashproducto.factura = Factura.objects.get(id=idfactura.id)
+                    facturahashproducto.save()
                 
-        return redirect('/')
+            return redirect('/')
                 
             
 
+        else:
+        
+            productos = Producto.objects.all()
+        
+            return render(request, 'Factura/insertar_factura.html', {'productos': productos})
+        
     else:
         
-        productos = Producto.objects.all()
-        
-        return render(request, 'Factura/insertar_factura.html', {'productos': productos})
+        return redirect('/Usuario/Ingreso/')
 
 
 def empleadoAPI(request, cedula):
@@ -319,12 +331,6 @@ def empleadoAPI(request, cedula):
     return HttpResponse(empleadojson, content_type="application/json")
 
 #endregion
-
-
-
-def mostrarFormulario(request):
-    
-    return render(request, 'Preguntas/preguntas.html')
 
 
 #region Reportes

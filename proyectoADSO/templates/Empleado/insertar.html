@@ -5,7 +5,7 @@
     <h1 style="text-align: center;">Formulario - Planilla de Empleados</h1>
     <form action="" method="POST" class="ui form">
         {% csrf_token %}
-        <div class="three fields">
+        <div class="two fields">
             <div class="field">
                 <label for="">Nombre del Empleado</label>
                 <input type="text" name="nombre_emp" id="nombre_emp">
@@ -14,11 +14,6 @@
             <div class="field">
                 <label for="">Apellido del Empleado</label>
                 <input type="text" name="apellido_emp" id="apellido_emp">
-            </div>
-            <div class="field">
-                <label for="">Días trabajados</label>
-                <input type="number" name="dias_trabajados" id="dias_trabajados">
-
             </div>
         </div>
         <div class="two fields">

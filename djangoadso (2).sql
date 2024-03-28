@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 27-02-2024 a las 01:05:57
+-- Tiempo de generación: 28-03-2024 a las 03:06:25
 -- Versión del servidor: 10.4.28-MariaDB
 -- Versión de PHP: 8.1.17
 
@@ -39,22 +39,12 @@ DELETE FROM empleado WHERE id=idempleado;
 
 END$$
 
-DROP PROCEDURE IF EXISTS `calcularSalario`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `calcularSalario` (IN `empleado_id` INT(11), IN `cargo_id` INT(11))   BEGIN
-    UPDATE Empleado 
-    SET salario_esperado = (SELECT (c.salario / 30) * e.dias_trabajados
-                            FROM Empleado e
-                            JOIN Cargo c ON e.cargo_id = c.id
-                            WHERE e.id = empleado_id AND c.id = cargo_id)
-    WHERE id = empleado_id;
-END$$
-
 DROP PROCEDURE IF EXISTS `cargarEmpleados`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `cargarEmpleados` ()   SELECT e.id,e.nombre_emp,e.apellido_emp,e.dias_trabajados,e.salario_esperado,e.genero_emp,e.celular_emp,e.correo_emp,e.departamento,e.documento_emp,e.cuenta_bancaria,e.tipo_cuenta,c.nombre as NombreCargo,c.salario from empleado as e INNER JOIN cargo as c WHERE e.cargo_id = c.id$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `cargarEmpleados` ()   SELECT e.id,e.nombre_emp,e.apellido_emp,e.genero_emp,e.celular_emp,e.correo_emp,e.departamento,e.documento_emp,e.cuenta_bancaria,e.tipo_cuenta,c.nombre as NombreCargo,c.salario from empleado as e INNER JOIN cargo as c WHERE e.cargo_id = c.id$$
 
 DROP PROCEDURE IF EXISTS `insertarEmpleado`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEmpleado` (IN `nombre_emp` VARCHAR(150), IN `apellido_emp` VARCHAR(150), IN `dias_trabajados` INT(8), IN `genero_emp` VARCHAR(20), IN `celular_emp` VARCHAR(20), IN `correo_emp` VARCHAR(100), IN `departamento` VARCHAR(100), IN `documento_emp` VARCHAR(100), IN `cuenta_bancaria` VARCHAR(80), IN `tipo_cuenta` VARCHAR(20), IN `cargo_id` INT(11))   BEGIN
-INSERT INTO empleado (nombre_emp,apellido_emp,dias_trabajados,genero_emp,celular_emp,correo_emp,departamento,documento_emp,cuenta_bancaria,tipo_cuenta,cargo_id) VALUES (nombre_emp,apellido_emp,dias_trabajados,genero_emp,celular_emp,correo_emp,departamento,documento_emp,cuenta_bancaria,tipo_cuenta,cargo_id);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `insertarEmpleado` (IN `nombre_emp` VARCHAR(150), IN `apellido_emp` VARCHAR(150), IN `genero_emp` VARCHAR(20), IN `celular_emp` VARCHAR(20), IN `correo_emp` VARCHAR(100), IN `departamento` VARCHAR(100), IN `documento_emp` VARCHAR(100), IN `cuenta_bancaria` VARCHAR(80), IN `tipo_cuenta` VARCHAR(20), IN `cargo_id` INT(11))   BEGIN
+INSERT INTO empleado (nombre_emp,apellido_emp,genero_emp,celular_emp,correo_emp,departamento,documento_emp,cuenta_bancaria,tipo_cuenta,cargo_id) VALUES (nombre_emp,apellido_emp,genero_emp,celular_emp,correo_emp,departamento,documento_emp,cuenta_bancaria,tipo_cuenta,cargo_id);
 END$$
 
 DELIMITER ;
@@ -134,7 +124,23 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (29, 'Can add session', 8, 'add_session'),
 (30, 'Can change session', 8, 'change_session'),
 (31, 'Can delete session', 8, 'delete_session'),
-(32, 'Can view session', 8, 'view_session');
+(32, 'Can view session', 8, 'view_session'),
+(33, 'Can add producto', 9, 'add_producto'),
+(34, 'Can change producto', 9, 'change_producto'),
+(35, 'Can delete producto', 9, 'delete_producto'),
+(36, 'Can view producto', 9, 'view_producto'),
+(37, 'Can add cliente', 10, 'add_cliente'),
+(38, 'Can change cliente', 10, 'change_cliente'),
+(39, 'Can delete cliente', 10, 'delete_cliente'),
+(40, 'Can view cliente', 10, 'view_cliente'),
+(41, 'Can add factura', 11, 'add_factura'),
+(42, 'Can change factura', 11, 'change_factura'),
+(43, 'Can delete factura', 11, 'delete_factura'),
+(44, 'Can view factura', 11, 'view_factura'),
+(45, 'Can add facturahash producto', 12, 'add_facturahashproducto'),
+(46, 'Can change facturahash producto', 12, 'change_facturahashproducto'),
+(47, 'Can delete facturahash producto', 12, 'delete_facturahashproducto'),
+(48, 'Can view facturahash producto', 12, 'view_facturahashproducto');
 
 -- --------------------------------------------------------
 
@@ -163,9 +169,11 @@ CREATE TABLE `auth_user` (
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
 (3, 'pbkdf2_sha256$600000$J2VpGxExd0kwV9AJQKrtHD$avLNFGNCqKjaP0ef4ks3ygg6PlNYe1e3PFjMHI4ny9Q=', NULL, 0, 'redes@wonnersclub.com', 'Daniel', 'Vergara', 'dv53468@gmail.com', 0, 1, '2023-09-12 13:37:24.657896'),
-(4, 'pbkdf2_sha256$600000$PKeVuTtuRnwpFOLiF0aUmV$fbotR4ytaJ1s1tKisb8cvUF8BntoeaCWql/iV79+mFE=', '2024-02-26 11:29:50.641425', 0, 'juandavn', 'Dani', 'Nieto', 'juanda.vn@gmail.com', 0, 1, '2023-09-12 13:39:13.448214'),
+(4, 'pbkdf2_sha256$600000$PKeVuTtuRnwpFOLiF0aUmV$fbotR4ytaJ1s1tKisb8cvUF8BntoeaCWql/iV79+mFE=', '2024-03-28 01:11:10.279070', 0, 'juandavn', 'Dani', 'Nieto', 'juanda.vn@gmail.com', 0, 1, '2023-09-12 13:39:13.448214'),
 (5, 'pbkdf2_sha256$600000$9hRwic1A8oKgsSUWmfkHcI$jjGbxNFoLnDJI1g2/fvcUIE6KEZ0aWYZg2BXv6nR9kY=', '2023-09-12 15:32:14.742672', 0, 'w', 'wW', 'w', 'w@h.vom', 0, 1, '2023-09-12 15:32:00.092943'),
-(6, 'pbkdf2_sha256$600000$G4OBLX3WA29vDYyKuQzyXq$B1/jh8qr5JyfNHaCCOqteA5wdEs+FyxfoampgH7dRrA=', '2023-10-04 11:38:31.428565', 0, 'juan_vergara', 'Juan Daniel', 'Vergara Nieto', 'dv53468@gmail.com', 0, 1, '2023-10-04 11:37:19.133177');
+(6, 'pbkdf2_sha256$600000$G4OBLX3WA29vDYyKuQzyXq$B1/jh8qr5JyfNHaCCOqteA5wdEs+FyxfoampgH7dRrA=', '2023-10-04 11:38:31.428565', 0, 'juan_vergara', 'Juan Daniel', 'Vergara Nieto', 'dv53468@gmail.com', 0, 1, '2023-10-04 11:37:19.133177'),
+(7, 'pbkdf2_sha256$600000$tTbe1CGEHzYK6l4LEaOQ1U$1q1JxV3tSYJ3y4833kbFj4C7f4PUlYfEufrMdYG+r/8=', '2024-03-11 17:21:29.598196', 0, 'pablop', 'Pablo', 'Palacio', 'pablo@gmail.com', 0, 1, '2024-03-11 17:20:55.273077'),
+(8, 'pbkdf2_sha256$600000$Wavw0qkRanBtDuEwvYu4B5$j8bjIy9pzjzSZAPE8kix9KLgjjSBOkgXh41Hasd+n0s=', '2024-03-28 01:56:25.247232', 0, 'administrador1', 'Probando Nuevo Registro', 'Administrador', 'admin1@gmail.com', 0, 1, '2024-03-28 01:56:04.363422');
 
 -- --------------------------------------------------------
 
@@ -217,7 +225,36 @@ INSERT INTO `cargo` (`id`, `nombre`, `salario`, `turno_laboral`, `rotacion_labor
 (1, 'ADMINISTRADOR', 3500000, 'DIURNO', 'NO', 'Encargado de control de todas las operaciones'),
 (2, 'VIGILANTE', 1200000, 'MIXTO', 'SI', 'Encargado de preservar la seguridad de las personas y los bienes de la organización.'),
 (3, 'VENDEDOR', 1500000, 'NOCTURNO', 'NO', 'Encargado de atender los clientes y registrar las compras que se realizan dentro del punto físico.'),
-(4, 'ASESOR COMERCIAL', 1200000, 'NOCTURNO', 'NO', 'Encargado de optimizar los procesos de venta de los vendedores.');
+(4, 'ASESOR COMERCIAL', 1200000, 'NOCTURNO', 'NO', 'Encargado de optimizar los procesos de venta de los vendedores.'),
+(6, 'Auxiliar Operario', 1800000, 'MIXTO', 'NO', 'Auxiliar operario en el área encargada de despachos.');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cliente`
+--
+
+DROP TABLE IF EXISTS `cliente`;
+CREATE TABLE `cliente` (
+  `id` int(11) NOT NULL,
+  `nombre_cliente` varchar(250) NOT NULL,
+  `tipo_identificacion` varchar(250) NOT NULL,
+  `numero_identificacion` varchar(250) NOT NULL,
+  `departamento` varchar(250) NOT NULL,
+  `ciudad` varchar(250) NOT NULL,
+  `direccion` varchar(250) NOT NULL,
+  `cod_postal` varchar(250) NOT NULL,
+  `correo` varchar(250) NOT NULL,
+  `telefono` varchar(250) NOT NULL,
+  `pref_contacto` varchar(250) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cliente`
+--
+
+INSERT INTO `cliente` (`id`, `nombre_cliente`, `tipo_identificacion`, `numero_identificacion`, `departamento`, `ciudad`, `direccion`, `cod_postal`, `correo`, `telefono`, `pref_contacto`) VALUES
+(4, 'Juan Vergara', 'CC', '222222', 'Probando Cambios', 'En esta vuelta', 'Cra 4 # 1 0', '22222', 'juandaaaaaa@gmail.com', '56857969', 'Correo Electrónico');
 
 -- --------------------------------------------------------
 
@@ -261,7 +298,11 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (6, 'auth', 'user'),
 (7, 'contenttypes', 'contenttype'),
 (1, 'proyectoADSO', 'cargo'),
+(10, 'proyectoADSO', 'cliente'),
 (2, 'proyectoADSO', 'empleado'),
+(11, 'proyectoADSO', 'factura'),
+(12, 'proyectoADSO', 'facturahashproducto'),
+(9, 'proyectoADSO', 'producto'),
 (8, 'sessions', 'session');
 
 -- --------------------------------------------------------
@@ -323,6 +364,7 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('3h9t2zn3a886n5d7srwvvn2fw97d4fqs', '.eJxVjDsOwjAQBe_iGlmxs_hDSc8ZorV3FwdQLMVJhbg7iZQC2pl5760GXJcyrI3nYSR1UaBOvyxhfvK0C3rgdK8612mZx6T3RB-26Vslfl2P9u-gYCvb2ooTQmEP0UHwgl2UDfXiOgYDJuWzR4LOJePFxmAcE1gfKLKNpk_q8wX4MDfy:1r7jFL:YlSc9djTAoAX3HCfMztb-rZjrS232DkPEhcylzkJ1xI', '2023-12-11 21:34:27.163899'),
 ('6ns2v6wlbhdlh4u1q5smpx7liq6niq62', '.eJxVjDsOwjAQBe_iGlmxs_hDSc8ZorV3FwdQLMVJhbg7iZQC2pl5760GXJcyrI3nYSR1UaBOvyxhfvK0C3rgdK8612mZx6T3RB-26Vslfl2P9u-gYCvb2ooTQmEP0UHwgl2UDfXiOgYDJuWzR4LOJePFxmAcE1gfKLKNpk_q8wX4MDfy:1qvcIw:XyUaDEVZ6-U3loZcTdtxspmXnqTSPyiEueH_oFfk6M0', '2023-11-08 11:44:06.228950'),
 ('cjyfi49e8q4maai450dsl2gzzzyjpszm', '.eJxVjDsOwjAQBe_iGlmxs_hDSc8ZorV3FwdQLMVJhbg7iZQC2pl5760GXJcyrI3nYSR1UaBOvyxhfvK0C3rgdK8612mZx6T3RB-26Vslfl2P9u-gYCvb2ooTQmEP0UHwgl2UDfXiOgYDJuWzR4LOJePFxmAcE1gfKLKNpk_q8wX4MDfy:1reZB8:r-6MoWDkwud9pEw0GZJpuk-o6dN4XcWQkrqJt_ewVg0', '2024-03-11 11:29:50.651481'),
+('di3wps4vpnnegindcbot42jotywsxhv7', '.eJxVTEsOwiAQvQtrQ6DtCLh07xmaGWaUqoGktCvj3aWmC01eXvK-LzXiuqRxrTKPE6uTcurw6xHGh-Qt4DvmW9Gx5GWeSG8VvadVXwrL87x3_w4S1tTWGDySkPUmGrpGDz34rwJjBrCug3Bk25i5a4awb4A4OMMSerLq_QHcjzdy:1rjjL7:HAQYZPuFq4n9ytO2dKPhLWSSm7v_CpBTPUwanVIwSfo', '2024-03-25 17:21:29.598986'),
 ('ftk7hrbeuar8uti2ppzkssi9wvtstlq0', '.eJxVjDsOwjAQBe_iGlnxN2tK-pzBWq83OIAcKU4qxN1JpBTQvpl5bxFxW0vcGi9xyuIqvLj8bgnpyfUA-YH1Pkua67pMSR6KPGmTw5z5dTvdv4OCrew1djkkgp7ZknegLGiXTM8-a0OoclKdcwmsxTE41LsJbJwFMKO3gUh8vuhpN7k:1qo0D1:L_aqZiJuhwCIT8eMxfBvQ66yJx2OKuoQCK3KiK2acK8', '2023-10-18 11:38:31.428565'),
 ('pfmynzgw8pf7lx11yrt9dwufd5tcyprz', '.eJxVjDsOwjAQBe_iGlmxs_hDSc8ZorV3FwdQLMVJhbg7iZQC2pl5760GXJcyrI3nYSR1UaBOvyxhfvK0C3rgdK8612mZx6T3RB-26Vslfl2P9u-gYCvb2ooTQmEP0UHwgl2UDfXiOgYDJuWzR4LOJePFxmAcE1gfKLKNpk_q8wX4MDfy:1rS10B:1yDlitvkWsg8Y7TQ5eOKt8WX729nHorCm3o0mPO9Vr8', '2024-02-05 20:34:39.709898'),
 ('qjuu73slhy6uppc00p4xizipmst2ddl2', '.eJxVjDsOwjAQBe_iGlmxs_hDSc8ZorV3FwdQLMVJhbg7iZQC2pl5760GXJcyrI3nYSR1UaBOvyxhfvK0C3rgdK8612mZx6T3RB-26Vslfl2P9u-gYCvb2ooTQmEP0UHwgl2UDfXiOgYDJuWzR4LOJePFxmAcE1gfKLKNpk_q8wX4MDfy:1qvcKA:vlkV5mZACUV0X7aMqW4kRuVofICR9-_lXQDa3vGDMp0', '2023-11-08 11:45:22.013522'),
@@ -340,8 +382,6 @@ CREATE TABLE `empleado` (
   `id` int(11) NOT NULL,
   `nombre_emp` varchar(150) NOT NULL,
   `apellido_emp` varchar(150) NOT NULL,
-  `dias_trabajados` int(8) NOT NULL,
-  `salario_esperado` int(8) NOT NULL,
   `genero_emp` varchar(20) NOT NULL,
   `celular_emp` varchar(20) NOT NULL,
   `correo_emp` varchar(100) NOT NULL,
@@ -356,13 +396,15 @@ CREATE TABLE `empleado` (
 -- Volcado de datos para la tabla `empleado`
 --
 
-INSERT INTO `empleado` (`id`, `nombre_emp`, `apellido_emp`, `dias_trabajados`, `salario_esperado`, `genero_emp`, `celular_emp`, `correo_emp`, `departamento`, `documento_emp`, `cuenta_bancaria`, `tipo_cuenta`, `cargo_id`) VALUES
-(9, 'Prueba', 'Editadoo', 25, 1000000, 'FEMENINO', '3434', 'asd@gmail.com', 'asdas', '11122', '767676', 'CORRIENTE', 4),
-(10, 'Juan Daniel', 'Vergara', 10, 400000, 'MASCULINO', '3043898027', 'juan@gmail.com', 'Sistemas', '1000662255', '0098877', 'CORRIENTE', 2),
-(11, 'Juan Daniel', 'asads', 10, 400000, 'MASCULINO', '30438998', 'dani@gmail.com', 'Sistemas', '1123213', '0098877', 'AHORROS', 2),
-(14, 'Freddy', 'Camacho', 20, 1000000, 'MASCULINO', '545454', 'fred@gmail.com', 'asdasd', '121221', '34534534', 'CORRIENTE', 3),
-(15, 'Alejandro', 'Largo', 30, 3500000, 'MASCULINO', '345345', 'largo@gmail.com', 'Sistemas', '2898989', '3878787', 'CORRIENTE', 1),
-(16, 'Victor', 'Pemberty', 10, 400000, 'MASCULINO', '31413123', 'asdadsdsd@gmail.com', 'asdasdas', '131231235', '4364356', 'CORRIENTE', 4);
+INSERT INTO `empleado` (`id`, `nombre_emp`, `apellido_emp`, `genero_emp`, `celular_emp`, `correo_emp`, `departamento`, `documento_emp`, `cuenta_bancaria`, `tipo_cuenta`, `cargo_id`) VALUES
+(9, 'Prueba', 'Editadoo', 'FEMENINO', '3434', 'asd@gmail.com', 'asdas', '11122', '767676', 'CORRIENTE', 4),
+(10, 'Juan Daniel', 'Vergara', 'MASCULINO', '3043898027', 'juan@gmail.com', 'Sistemas', '1000662255', '0098877', 'CORRIENTE', 2),
+(11, 'Juan Daniel', 'asads', 'MASCULINO', '30438998', 'dani@gmail.com', 'Sistemas', '1123213', '0098877', 'AHORROS', 2),
+(14, 'Freddy', 'Camacho', 'MASCULINO', '545454', 'fred@gmail.com', 'asdasd', '121221', '34534534', 'CORRIENTE', 3),
+(15, 'Alejandro', 'Largo', 'MASCULINO', '345345', 'largo@gmail.com', 'Sistemas', '2898989', '3878787', 'CORRIENTE', 1),
+(16, 'Victor', 'Pemberty', 'MASCULINO', '31413123', 'asdadsdsd@gmail.com', 'asdasdas', '131231235', '4364356', 'CORRIENTE', 4),
+(17, 'Julian', 'Aaskldjlaksjd', 'MASCULINO', '44343435', 'julianempleado@gmail.com', 'Ventas', '12637612', '182739172983', 'CORRIENTE', 3),
+(18, 'Nuevo empleado', 'Novato', 'MASCULINO', '23121321231', 'asdqqqq@gmail.com', 'Ventas', '11155566', '0021213211', 'CORRIENTE', 3);
 
 -- --------------------------------------------------------
 
@@ -402,7 +444,10 @@ INSERT INTO `factura` (`id`, `fecha`, `total`, `empleado_id`) VALUES
 (17, '2024-02-13', 28500, 15),
 (18, '2024-02-13', 32000, 16),
 (19, '2024-02-14', 21800, 15),
-(20, '2024-02-19', 72000, 10);
+(20, '2024-02-19', 72000, 10),
+(21, '2024-02-28', 19000, 16),
+(22, '2024-03-11', 4500000, 17),
+(23, '2024-03-11', 3750000, 11);
 
 -- --------------------------------------------------------
 
@@ -474,7 +519,14 @@ INSERT INTO `facturahashproducto` (`id`, `factura_id`, `producto_id`, `cantidad`
 (49, 19, 9, 4),
 (50, 20, 6, 2),
 (51, 20, 7, 5),
-(52, 20, 5, 20);
+(52, 20, 5, 20),
+(53, 21, 6, 2),
+(54, 21, 5, 3),
+(55, 21, 8, 4),
+(56, 22, 11, 1),
+(57, 22, 10, 1),
+(58, 23, 11, 1),
+(59, 23, 12, 5);
 
 -- --------------------------------------------------------
 
@@ -498,7 +550,12 @@ INSERT INTO `producto` (`id`, `nombre`, `precio`) VALUES
 (6, 'Papas', 3500),
 (7, 'Bon Yurt', 5000),
 (8, 'Gol', 1500),
-(9, 'Papas criolla', 3200);
+(9, 'Papas criolla', 3200),
+(10, 'Poncho', 2000000),
+(11, 'iPhone 15', 2500000),
+(12, 'Cargador de Android', 150000),
+(13, 'Probando producto nuevo', 222222),
+(14, 'Nuevo Producto2', 180000);
 
 --
 -- Índices para tablas volcadas
@@ -553,6 +610,12 @@ ALTER TABLE `auth_user_user_permissions`
 -- Indices de la tabla `cargo`
 --
 ALTER TABLE `cargo`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `cliente`
+--
+ALTER TABLE `cliente`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -631,13 +694,13 @@ ALTER TABLE `auth_group_permissions`
 -- AUTO_INCREMENT de la tabla `auth_permission`
 --
 ALTER TABLE `auth_permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `auth_user`
 --
 ALTER TABLE `auth_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `auth_user_groups`
@@ -655,7 +718,13 @@ ALTER TABLE `auth_user_user_permissions`
 -- AUTO_INCREMENT de la tabla `cargo`
 --
 ALTER TABLE `cargo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `cliente`
+--
+ALTER TABLE `cliente`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `django_admin_log`
@@ -667,7 +736,7 @@ ALTER TABLE `django_admin_log`
 -- AUTO_INCREMENT de la tabla `django_content_type`
 --
 ALTER TABLE `django_content_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `django_migrations`
@@ -679,25 +748,25 @@ ALTER TABLE `django_migrations`
 -- AUTO_INCREMENT de la tabla `empleado`
 --
 ALTER TABLE `empleado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `factura`
 --
 ALTER TABLE `factura`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `facturahashproducto`
 --
 ALTER TABLE `facturahashproducto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas

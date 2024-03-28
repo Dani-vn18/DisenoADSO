@@ -24,8 +24,6 @@ class Producto(models.Model):
 class Empleado(models.Model):
     nombre_emp = models.CharField(max_length=150)
     apellido_emp = models.CharField(max_length=150)
-    dias_trabajados = models.IntegerField()
-    salario_esperado = models.IntegerField()
     genero_emp = models.CharField(max_length=20)
     celular_emp = models.CharField(max_length=20)
     correo_emp = models.CharField(max_length=100)
@@ -58,14 +56,3 @@ class FacturahashProducto(models.Model):
     class Meta:
         db_table = 'facturahashproducto'
         
-        
-"""       
-class Formulario(models.Model):
-    
-    pregunta = models.CharField(max_length=255)
-    score = models.IntegerField()
-    puntuacion_final = models.IntegerField()
-    
-    class Meta:
-        db_table = 'Formulario'
-"""
